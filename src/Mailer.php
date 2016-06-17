@@ -3,6 +3,7 @@
 namespace mikk150\queuemailer;
 
 use mikk150\queuemailer\jobs\MailJob;
+use yii\di\Instance;
 use yii\mail\BaseMailer;
 
 /**
@@ -23,5 +24,11 @@ class Mailer extends BaseMailer
             'mailer' => $this->mailer
         ]);
         return $job->push();
+    }
+
+    public function compose($view = null, array $params = [])
+    {
+        $mailer = Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
+        return $mailer->compose($view, $params);
     }
 }
