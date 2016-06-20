@@ -3,6 +3,8 @@
 namespace mikk150\queuemailer;
 
 use mikk150\queuemailer\jobs\MailJob;
+use yii\base\UnknownMethodException;
+use yii\base\UnknownPropertyException;
 use yii\di\Instance;
 use yii\mail\BaseMailer;
 
@@ -16,6 +18,47 @@ class Mailer extends BaseMailer
      * mailer config or component to send mail out in the end
      */
     public $mailer;
+
+    /**
+     * @param string $name
+     * @param array $params
+     * @return mixed
+     */
+    public function __call($name, $params)
+    {
+        try {
+            return parent::__call($name, $params);
+        } catch (UnknownMethodException $e) {
+            return call_user_func_array([$this->getInstance(), $name], $params);
+        }
+    }
+
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        try {
+            return parent::__get($name);
+        } catch (UnknownPropertyException $e) {
+            return $this->getInstance()->{$name};
+        }
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return mixed|void
+     */
+    public function __set($name, $value)
+    {
+        try {
+            return parent::__set($name, $value);
+        } catch (UnknownPropertyException $e) {
+            return $this->getInstance()->{$name} = $value;
+        }
+    }
 
     /**
      * @inheritdoc
@@ -34,7 +77,15 @@ class Mailer extends BaseMailer
      */
     public function compose($view = null, array $params = [])
     {
-        $mailer = Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
-        return $mailer->compose($view, $params);
+        return $this->getInstance()->compose($view, $params);
+    }
+
+    /**
+     * @return object
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getInstance()
+    {
+        return Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
     }
 }
