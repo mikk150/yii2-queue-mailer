@@ -3,6 +3,8 @@
 namespace mikk150\queuemailer;
 
 use mikk150\queuemailer\jobs\MailJob;
+use yii\base\UnknownMethodException;
+use yii\base\UnknownPropertyException;
 use yii\di\Instance;
 use yii\mail\BaseMailer;
 
@@ -17,6 +19,34 @@ class Mailer extends BaseMailer
      */
     public $mailer;
 
+
+    public function __call($name, $params)
+    {
+        try {
+            return parent::__call($name, $params);
+        } catch (UnknownMethodException $e) {
+            return call_user_func_array([$this->getInstance(), $name], $params);
+        }
+    }
+
+    public function __get($name)
+    {
+        try {
+            return parent::__get($name);
+        } catch (UnknownPropertyException $e) {
+            return $this->getInstance()->{$name};
+        }
+    }
+
+    public function __set($name, $value)
+    {
+        try {
+            return parent::__set($name, $value);
+        } catch (UnknownPropertyException $e) {
+            return $this->getInstance()->{$name} = $value;
+        }
+    }
+
     protected function sendMessage($message)
     {
         $job=new MailJob([
@@ -28,7 +58,11 @@ class Mailer extends BaseMailer
 
     public function compose($view = null, array $params = [])
     {
-        $mailer = Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
-        return $mailer->compose($view, $params);
+        return $this->getInstance()->compose($view, $params);
+    }
+
+    public function getInstance()
+    {
+        return Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
     }
 }
