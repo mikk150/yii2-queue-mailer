@@ -19,7 +19,6 @@ class Mailer extends BaseMailer
      */
     public $mailer;
 
-
     public function __call($name, $params)
     {
         try {
@@ -47,6 +46,9 @@ class Mailer extends BaseMailer
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function sendMessage($message)
     {
         $job=new MailJob([
@@ -56,6 +58,9 @@ class Mailer extends BaseMailer
         return $job->push();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function compose($view = null, array $params = [])
     {
         return $this->getInstance()->compose($view, $params);

@@ -3,6 +3,7 @@
     "description": "yii2 queue mailer component",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","queue", "mailer"],
+    "license": "GPL-2.0",
     "authors": [
         {
             "name": "Mikk Tendermann",
