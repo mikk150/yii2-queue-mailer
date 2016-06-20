@@ -19,6 +19,11 @@ class Mailer extends BaseMailer
      */
     public $mailer;
 
+    /**
+     * @param string $name
+     * @param array $params
+     * @return mixed
+     */
     public function __call($name, $params)
     {
         try {
@@ -28,6 +33,10 @@ class Mailer extends BaseMailer
         }
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function __get($name)
     {
         try {
@@ -37,6 +46,11 @@ class Mailer extends BaseMailer
         }
     }
 
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return mixed|void
+     */
     public function __set($name, $value)
     {
         try {
@@ -66,6 +80,10 @@ class Mailer extends BaseMailer
         return $this->getInstance()->compose($view, $params);
     }
 
+    /**
+     * @return object
+     * @throws \yii\base\InvalidConfigException
+     */
     public function getInstance()
     {
         return Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
