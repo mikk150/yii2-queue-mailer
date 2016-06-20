@@ -17,6 +17,9 @@ class Mailer extends BaseMailer
      */
     public $mailer;
 
+    /**
+     * @inheritdoc
+     */
     protected function sendMessage($message)
     {
         $job=new MailJob([
@@ -26,6 +29,9 @@ class Mailer extends BaseMailer
         return $job->push();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function compose($view = null, array $params = [])
     {
         $mailer = Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
