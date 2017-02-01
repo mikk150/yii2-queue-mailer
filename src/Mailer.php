@@ -77,7 +77,9 @@ class Mailer extends BaseMailer
      */
     public function compose($view = null, array $params = [])
     {
-        return $this->getInstance()->compose($view, $params);
+        $message = $this->getInstance()->compose($view, $params);
+        $message->mailer = $this;
+        return $message;
     }
 
     /**
