@@ -2,6 +2,8 @@ Yii2 Queue mailer
 =================
 Queue mailer for Yii 2 framework
 
+[![Build Status](https://travis-ci.org/mikk150/yii2-queue-mailer.svg?branch=master)](https://travis-ci.org/mikk150/yii2-queue-mailer)
+
 Installation
 ------------
 Either run
