@@ -26,6 +26,11 @@
             "mikk150\\queuemailer\\": "src/"
         }
     },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "2.0.x-dev"
+        }
+    },
     "repositories": [
         {
             "type": "vcs",
