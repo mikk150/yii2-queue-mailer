@@ -57,9 +57,12 @@ class SenderTest extends TestCase
                     ]
                 ],
                 'queue' => [
-                    'class' => '\yiiunit\extensions\queuemailer\TestQueue'
-                ]
-            ]
+                    'class' => '\yii\queue\Queue',
+                    'serializer' => '\yii\queue\serializers\PhpSerializer',
+                    'messenger' => '\yii\queue\messengers\instant\InstantMessenger',
+                    'executor' => '\yii\queue\executors\instant\Executor',
+                ],
+            ],
         ]);
 
         $jobId = $app->mailer->compose('test', [])->setTo('test@mailinator.com')->send();
@@ -78,17 +81,23 @@ class SenderTest extends TestCase
                     ]
                 ],
                 'queue' => [
-                    'class' => '\yiiunit\extensions\queuemailer\TestQueue'
+                    'class' => '\yii\queue\Queue',
+                    'serializer' => '\yii\queue\serializers\PhpSerializer',
+                    'messenger' => '\yii\queue\messengers\arraymessenger\ArrayMessenger',
+                    'executor' => '\yii\queue\executors\instant\Executor',
                 ]
             ]
         ]);
 
         $app->mailer->compose('test', [])->setTo(['test@mailinator.com' => 'John Test'])->send();
 
-        $job = $app->queue->pop('mailjob');
-        $jobObject = call_user_func($job['body']['serializer'][1], $job['body']['object']);
+        /**
+         * @var        \yii\queue\messengers\Message
+         */
+        $message = $app->queue->messenger->reserve();
+        $job = $app->queue->serializer->unserialize($message->message);
 
-        $this->assertInstanceOf('yii\swiftmailer\Message', $jobObject->message);
-        $this->assertEquals(['test@mailinator.com' => 'John Test'], $jobObject->message->getTo());
+        $this->assertInstanceOf('yii\swiftmailer\Message', $job->message);
+        $this->assertEquals(['test@mailinator.com' => 'John Test'], $job->message->getTo());
     }
 }

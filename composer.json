@@ -12,14 +12,24 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
-        "yiisoft/yii2-queue": "dev-master"
+        "yiisoft/yii2-queue": "2.2.x-dev"
     },
     "require-dev": {
+        "phpunit/phpunit": "~4.4",
+        "codeception/codeception": "~2.2.11",
+        "codeception/specify": "*",
+        "codeception/verify": "*",
         "yiisoft/yii2-swiftmailer": "*"
     },
     "autoload": {
         "psr-4": {
             "mikk150\\queuemailer\\": "src/"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://gitlab.com/yii2-queue/yii2-queue"
+        }
+    ]
 }

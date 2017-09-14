@@ -9,15 +9,17 @@ use yii\di\Instance;
 use yii\mail\BaseMailer;
 
 /**
-*
-*/
+ * @property-write string|array|\yii\queue\Queue  $queue
+ */
 class Mailer extends BaseMailer
 {
-
     /**
      * mailer config or component to send mail out in the end
+     * @var string|array|\yii\mail\BaseMailer
      */
     public $mailer;
+
+    private $_queue;
 
     /**
      * @param string $name
@@ -63,13 +65,45 @@ class Mailer extends BaseMailer
     /**
      * @inheritdoc
      */
+    public function init()
+    {
+        parent::init();
+        if (!$this->_queue) {
+            $this->setQueue('queue');
+        }
+    }
+
+    /**
+     * Sets the queue.
+     *
+     * @param      string|array|\yii\queue\Queue  $queue  The queue
+     */
+    public function setQueue($queue)
+    {
+        $this->_queue = Instance::ensure($queue, 'yii\queue\Queue');
+    }
+
+    /**
+     * Gets the queue.
+     *
+     * @return     \yii\queue\Queue  The queue.
+     */
+    protected function getQueue()
+    {
+        return $this->_queue;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function sendMessage($message)
     {
-        $job=new MailJob([
+        $job = new MailJob([
             'message' => $message,
             'mailer' => $this->mailer
         ]);
-        return $job->push();
+
+        return $this->getQueue()->push($job);
     }
 
     /**

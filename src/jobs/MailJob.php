@@ -2,24 +2,23 @@
 
 namespace mikk150\queuemailer\jobs;
 
-use yii\queue\ActiveJob;
+use yii\queue\Job;
+use yii\base\Object;
 use yii\di\Instance;
 
 /**
-*
-*/
-class MailJob extends ActiveJob
+ *
+ */
+class MailJob extends Object implements Job
 {
     public $mailer;
 
     public $message;
 
-    public function queueName()
-    {
-        return 'mailjob';
-    }
-
-    public function run()
+    /**
+     * @inheritdoc
+     */
+    public function execute($queue)
     {
         $mailer = Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
         $mailer->send($this->message);
