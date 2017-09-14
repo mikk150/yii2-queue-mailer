@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "*",
+        "yiisoft/yii2": "~2.0.0",
         "yiisoft/yii2-queue": "2.2.x-dev"
     },
     "require-dev": {
@@ -30,6 +30,10 @@
         {
             "type": "vcs",
             "url": "https://gitlab.com/yii2-queue/yii2-queue"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
         }
     ]
 }

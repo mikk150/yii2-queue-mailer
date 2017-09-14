@@ -20,6 +20,12 @@ class SenderTest extends TestCase
                         'class' => '\yii\swiftmailer\Mailer'
                     ]
                 ],
+                'queue' => [
+                    'class' => '\yii\queue\Queue',
+                    'serializer' => '\yii\queue\serializers\PhpSerializer',
+                    'messenger' => '\yii\queue\messengers\instant\InstantMessenger',
+                    'executor' => '\yii\queue\executors\instant\Executor',
+                ],
             ]
         ]);
 
@@ -37,7 +43,13 @@ class SenderTest extends TestCase
                     'mailer' => [
                         'class' => '\yii\swiftmailer\Mailer'
                     ]
-                ]
+                ],
+                'queue' => [
+                    'class' => '\yii\queue\Queue',
+                    'serializer' => '\yii\queue\serializers\PhpSerializer',
+                    'messenger' => '\yii\queue\messengers\instant\InstantMessenger',
+                    'executor' => '\yii\queue\executors\instant\Executor',
+                ],
             ]
         ]);
 

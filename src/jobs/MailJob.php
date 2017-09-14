@@ -18,7 +18,7 @@ class MailJob extends Object implements Job
     /**
      * @inheritdoc
      */
-    public function execute($queue)
+    public function execute()
     {
         $mailer = Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
         $mailer->send($this->message);
