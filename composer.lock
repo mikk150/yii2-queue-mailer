@@ -624,12 +624,12 @@
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/yii2-queue/yii2-queue.git",
-                "reference": "f3e9b9b8165edef4b524f6c56bc3e7d369997317"
+                "reference": "85266b3146f01f30453f3bfa1a245be80d93609b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v3/projects/yii2-queue%2Fyii2-queue/repository/archive.zip?sha=f3e9b9b8165edef4b524f6c56bc3e7d369997317",
-                "reference": "f3e9b9b8165edef4b524f6c56bc3e7d369997317",
+                "url": "https://gitlab.com/api/v3/projects/yii2-queue%2Fyii2-queue/repository/archive.zip?sha=85266b3146f01f30453f3bfa1a245be80d93609b",
+                "reference": "85266b3146f01f30453f3bfa1a245be80d93609b",
                 "shasum": ""
             },
             "require": {
@@ -673,7 +673,7 @@
                 "queue",
                 "yii"
             ],
-            "time": "2017-09-13 12:37:56"
+            "time": "2017-09-14 14:32:00"
         }
     ],
     "packages-dev": [
