@@ -80,7 +80,7 @@ class Mailer extends BaseMailer
      */
     public function setQueue($queue)
     {
-        $this->_queue = Instance::ensure($queue, 'yii\queue\Queue');
+        $this->_queue = $queue;
     }
 
     /**
@@ -90,7 +90,7 @@ class Mailer extends BaseMailer
      */
     protected function getQueue()
     {
-        return $this->_queue;
+        return Instance::ensure($this->_queue, 'yii\queue\Queue');
     }
 
     /**
