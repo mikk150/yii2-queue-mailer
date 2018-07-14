@@ -8,6 +8,7 @@ use yii\base\UnknownMethodException;
 use yii\base\UnknownPropertyException;
 use yii\di\Instance;
 use yii\mail\BaseMailer;
+use yii\mail\MailerInterface;
 use yii\queue\Queue;
 
 /**
@@ -17,7 +18,7 @@ use yii\queue\Queue;
 class Mailer extends BaseMailer
 {
     /**
-     * @var string|array|BaseMailer Mailer config or component to send mail out in the end
+     * @var string|array|MailerInterface Mailer config or component to send mail out in the end
      */
     public $mailer;
 
@@ -33,7 +34,7 @@ class Mailer extends BaseMailer
     public function init()
     {
         parent::init();
-        $this->mailer = Instance::ensure($this->mailer, BaseMailer::class);
+        $this->mailer = Instance::ensure($this->mailer, MailerInterface::class);
         $this->queue = Instance::ensure($this->queue, Queue::class);
     }
 

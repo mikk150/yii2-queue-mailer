@@ -22,22 +22,26 @@ class MailJobTest extends \Codeception\Test\Unit
      * @test
      * @throws Exception
      */
-    public function mailerEnsureDuringInit()
+    public function ensureMailerDuringInit()
     {
-        $message = Stub::makeEmpty(MessageInterface::class);
         $this->expectException(InvalidConfigException::class);
-        new MailJob(['mailer' => 'cannotcrossit', 'message' => $message]);
+        new MailJob([
+            'mailer' => 'cannotcrossit',
+            'message' => Stub::makeEmpty(MessageInterface::class),
+        ]);
     }
 
     /**
      * @test
      * @throws Exception
      */
-    public function messageEnsureDuringInit()
+    public function ensureMessageDuringInit()
     {
-        $mailer = Stub::makeEmpty(MailerInterface::class);
         $this->expectException(InvalidConfigException::class);
-        new MailJob(['mailer' => $mailer, 'message' => 'cannotcrossit']);
+        new MailJob([
+            'mailer' => Stub::makeEmpty(MailerInterface::class),
+            'message' => 'cannotcrossit',
+        ]);
     }
 
     /**
@@ -46,9 +50,10 @@ class MailJobTest extends \Codeception\Test\Unit
      */
     public function successfulInstantiation()
     {
-        $mailer = Stub::makeEmpty(MailerInterface::class);
-        $message = Stub::makeEmpty(MessageInterface::class);
-        $job = new MailJob(['mailer' => $mailer, 'message' => $message]);
+        $job = new MailJob([
+            'mailer' => Stub::makeEmpty(MailerInterface::class),
+            'message' => Stub::makeEmpty(MessageInterface::class),
+        ]);
         $this->assertInstanceOf(JobInterface::class, $job);
     }
 
