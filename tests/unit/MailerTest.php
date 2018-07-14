@@ -122,4 +122,61 @@ class MailerTest extends \Codeception\Test\Unit
         $this->assertInstanceOf(MessageInterface::class, $message);
         $this->assertEquals($message->mailer, $mailer);
     }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function proxySetters()
+    {
+        $mailer = new Mailer([
+            'mailer' => Stub::makeEmpty(MailerInterface::class, [
+                '__set' => Expected::once(function($name, $value) {
+                    $this->assertEquals('notexist', $name);
+                    $this->assertEquals('123', $value);
+                })
+            ], $this),
+            'queue' => Stub::makeEmpty(Queue::class),
+        ]);
+        $mailer->notexist = '123';
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function proxyGetters()
+    {
+        $mailer = new Mailer([
+            'mailer' => Stub::makeEmpty(MailerInterface::class, [
+                '__get' => Expected::once(function($name) {
+                    $this->assertEquals('notexist', $name);
+                    return '123';
+                })
+            ], $this),
+            'queue' => Stub::makeEmpty(Queue::class),
+        ]);
+        $value = $mailer->notexist;
+        $this->assertEquals('123', $value);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function proxyMethods()
+    {
+        $mailer = new Mailer([
+            'mailer' => Stub::makeEmpty(MailerInterface::class, [
+                '__call' => Expected::once(function($name, $params) {
+                    $this->assertEquals('notexist', $name);
+                    $this->assertEquals([1], $params);
+                    return '123';
+                })
+            ], $this),
+            'queue' => Stub::makeEmpty(Queue::class),
+        ]);
+        $value = $mailer->notexist(1);
+        $this->assertEquals('123', $value);
+    }
 }
