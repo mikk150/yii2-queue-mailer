@@ -30,9 +30,9 @@ configure Yii2 config
         'class' => \mikk150\queuemailer\Mailer::class,
         'mailer' => [
             'class' => '<underlying mailer config>',
+            'messageClass' => '<underlying mailer message class>',
         ],
         'queue' => 'mailer-queue', // in case you need specific queue
-        'messageClass' => '<underlying mailer message class>',
     ],
 ]
 ```
@@ -40,3 +40,19 @@ and use just like you are using underlying mailer.
 Emails are being queued and being sent by worker
 
 To set up yii2 queue, please refer to <https://github.com/yiisoft/yii2-queue>
+
+Retryable job
+-------------
+You can setup retryable job to make several attemts of mail sending.
+```php
+'components' => [
+    'mailer' => [
+        'class' => \mikk150\queuemailer\Mailer::class,
+        'jobConfig' => [
+            'class' => \mikk150\queuemailer\jobs\MailRetryableJob::class,
+            'attempts' => 10,
+            'timeToRetry' => 600, // ten minutes
+        ],
+    ],
+]
+```

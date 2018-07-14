@@ -7,6 +7,7 @@ use yii\base\InvalidConfigException;
 use yii\base\UnknownMethodException;
 use yii\base\UnknownPropertyException;
 use yii\di\Instance;
+use yii\helpers\ArrayHelper;
 use yii\mail\BaseMailer;
 use yii\mail\MailerInterface;
 use yii\queue\Queue;
@@ -20,12 +21,19 @@ class Mailer extends BaseMailer
     /**
      * @var string|array|MailerInterface Mailer config or component to send mail out in the end
      */
-    public $mailer;
+    public $mailer = 'mailer';
 
     /**
      * @var string|array|Queue
      */
-    public $queue;
+    public $queue = 'queue';
+
+    /**
+     * @var string|array|MailJob
+     */
+    public $jobConfig = [
+        'class' => MailJob::class,
+    ];
 
     /**
      * @inheritdoc
@@ -80,13 +88,16 @@ class Mailer extends BaseMailer
 
     /**
      * @inheritdoc
+     * @throws InvalidConfigException
      */
     protected function sendMessage($message)
     {
-        $this->queue->push(new MailJob([
+        $jobConfig = ArrayHelper::merge($this->jobConfig, [
             'message' => $message,
             'mailer' => $this->mailer,
-        ]));
+        ]);
+        $job = Instance::ensure($jobConfig, MailJob::class);
+        $this->queue->push($job);
         return true;
     }
 

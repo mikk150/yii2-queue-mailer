@@ -61,7 +61,7 @@ class MailJobTest extends \Codeception\Test\Unit
      * @test
      * @throws Exception
      */
-    public function messageSended()
+    public function messageSent()
     {
         $mailer = Stub::makeEmpty(MailerInterface::class, [
             'send' => Expected::once(function($message) {

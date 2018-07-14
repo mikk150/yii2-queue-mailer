@@ -6,6 +6,7 @@ use Codeception\Stub;
 use Codeception\Stub\Expected;
 use Exception;
 use mikk150\queuemailer\jobs\MailJob;
+use mikk150\queuemailer\jobs\MailRetryableJob;
 use mikk150\queuemailer\Mailer;
 use tests\DummyMailerInterface;
 use yii\base\InvalidConfigException;
@@ -176,5 +177,48 @@ class MailerTest extends \Codeception\Test\Unit
         ]);
         $value = $mailer->dummy(1);
         $this->assertEquals('123', $value);
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function configureJob()
+    {
+        /** @var MessageInterface $message */
+        $message = Stub::makeEmpty(MessageInterface::class);
+        $mailer = Stub::makeEmpty(MailerInterface::class);
+
+        $queueMailer = new Mailer([
+            'jobConfig' => [
+                'class' => MailRetryableJob::class,
+                'attempts' => 123,
+                'timeToRetry' => 321,
+            ],
+            'mailer' => $mailer,
+            'queue' => Stub::makeEmpty(Queue::class, [
+                'push' => Expected::once(function($job) use ($message, $mailer) {
+                    $this->assertInstanceOf(
+                        MailRetryableJob::class,
+                        $job,
+                        'Pushed message should me instance of MailJob'
+                    );
+                    $this->assertEquals(123, $job->attempts);
+                    $this->assertEquals(321, $job->timeToRetry);
+                    $this->assertEquals(
+                        $job->message,
+                        $message,
+                        'Job `message` should be the equal to sent message'
+                    );
+                    $this->assertEquals(
+                        $job->mailer,
+                        $mailer,
+                        'Job `mailer` should be the equal to configured mailer'
+                    );
+                }),
+            ], $this),
+        ]);
+        $result = $queueMailer->send($message);
+        $this->assertTrue($result);
     }
 }
