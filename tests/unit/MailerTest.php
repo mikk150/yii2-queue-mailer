@@ -7,6 +7,7 @@ use Codeception\Stub\Expected;
 use Exception;
 use mikk150\queuemailer\jobs\MailJob;
 use mikk150\queuemailer\Mailer;
+use tests\DummyMailerInterface;
 use yii\base\InvalidConfigException;
 use yii\mail\MailerInterface;
 use yii\mail\MessageInterface;
@@ -149,10 +150,7 @@ class MailerTest extends \Codeception\Test\Unit
     {
         $mailer = new Mailer([
             'mailer' => Stub::makeEmpty(MailerInterface::class, [
-                '__get' => Expected::once(function($name) {
-                    $this->assertEquals('notexist', $name);
-                    return '123';
-                })
+                'notexist' => '123',
             ], $this),
             'queue' => Stub::makeEmpty(Queue::class),
         ]);
@@ -167,16 +165,16 @@ class MailerTest extends \Codeception\Test\Unit
     public function proxyMethods()
     {
         $mailer = new Mailer([
-            'mailer' => Stub::makeEmpty(MailerInterface::class, [
-                '__call' => Expected::once(function($name, $params) {
-                    $this->assertEquals('notexist', $name);
-                    $this->assertEquals([1], $params);
+            'mailer' => Stub::makeEmpty(DummyMailerInterface::class, [
+                'dummy' => function($value) {
+                    $this->assertEquals(1, $value);
                     return '123';
-                })
+                }
+
             ], $this),
             'queue' => Stub::makeEmpty(Queue::class),
         ]);
-        $value = $mailer->notexist(1);
+        $value = $mailer->dummy(1);
         $this->assertEquals('123', $value);
     }
 }
