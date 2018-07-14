@@ -27,10 +27,11 @@ configure Yii2 config
 ```php
 'components' => [
     'mailer' => [
-        'class' => 'mikk150\queuemailer\Mailer',
+        'class' => \mikk150\queuemailer\Mailer::class,
         'mailer' => [
             'class' => '<underlying mailer config>',
         ],
+        'queue' => 'mailer-queue', // in case you need specific queue
         'messageClass' => '<underlying mailer message class>',
     ],
 ]
