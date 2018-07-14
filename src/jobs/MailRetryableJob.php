@@ -51,4 +51,3 @@ class MailRetryableJob extends MailJob implements RetryableJobInterface
         }
     }
 }
-
