@@ -2,7 +2,12 @@ Yii2 Queue mailer
 =================
 Queue mailer for Yii 2 framework
 
-[![Build Status](https://travis-ci.org/mikk150/yii2-queue-mailer.svg?branch=master)](https://travis-ci.org/mikk150/yii2-queue-mailer)
+[![Build Status](https://travis-ci.org/alexeevdv/yii2-queue-mailer.svg?branch=master)](https://travis-ci.org/alexeevdv/yii2-queue-mailer)
+[![codecov](https://codecov.io/gh/alexeevdv/yii2-queue-mailer/branch/master/graph/badge.svg)](https://codecov.io/gh/alexeevdv/yii2-queue-mailer)
+![PHP 5.6](https://img.shields.io/badge/PHP-5.6-green.svg) 
+![PHP 7.0](https://img.shields.io/badge/PHP-7.0-green.svg) 
+![PHP 7.1](https://img.shields.io/badge/PHP-7.1-green.svg) 
+![PHP 7.2](https://img.shields.io/badge/PHP-7.2-green.svg)
 
 Installation
 ------------
