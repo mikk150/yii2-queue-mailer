@@ -3,21 +3,48 @@
 namespace mikk150\queuemailer;
 
 use mikk150\queuemailer\jobs\MailJob;
+use yii\base\InvalidConfigException;
 use yii\base\UnknownMethodException;
 use yii\base\UnknownPropertyException;
 use yii\di\Instance;
+use yii\helpers\ArrayHelper;
 use yii\mail\BaseMailer;
+use yii\mail\MailerInterface;
+use yii\queue\Queue;
 
 /**
-*
-*/
+ * Class Mailer
+ * @package mikk150\queuemailer
+ */
 class Mailer extends BaseMailer
 {
+    /**
+     * @var string|array|MailerInterface Mailer config or component to send mail out in the end
+     */
+    public $mailer = 'mailer';
 
     /**
-     * mailer config or component to send mail out in the end
+     * @var string|array|Queue
      */
-    public $mailer;
+    public $queue = 'queue';
+
+    /**
+     * @var string|array|MailJob
+     */
+    public $jobConfig = [
+        'class' => MailJob::class,
+    ];
+
+    /**
+     * @inheritdoc
+     * @throws InvalidConfigException
+     */
+    public function init()
+    {
+        parent::init();
+        $this->mailer = Instance::ensure($this->mailer, MailerInterface::class);
+        $this->queue = Instance::ensure($this->queue, Queue::class);
+    }
 
     /**
      * @param string $name
@@ -29,7 +56,7 @@ class Mailer extends BaseMailer
         try {
             return parent::__call($name, $params);
         } catch (UnknownMethodException $e) {
-            return call_user_func_array([$this->getInstance(), $name], $params);
+            return call_user_func_array([$this->mailer, $name], $params);
         }
     }
 
@@ -42,34 +69,36 @@ class Mailer extends BaseMailer
         try {
             return parent::__get($name);
         } catch (UnknownPropertyException $e) {
-            return $this->getInstance()->{$name};
+            return $this->mailer->{$name};
         }
     }
 
     /**
      * @param string $name
      * @param mixed $value
-     * @return mixed|void
      */
     public function __set($name, $value)
     {
         try {
-            return parent::__set($name, $value);
+            parent::__set($name, $value);
         } catch (UnknownPropertyException $e) {
-            return $this->getInstance()->{$name} = $value;
+            $this->mailer->{$name} = $value;
         }
     }
 
     /**
      * @inheritdoc
+     * @throws InvalidConfigException
      */
     protected function sendMessage($message)
     {
-        $job=new MailJob([
+        $jobConfig = ArrayHelper::merge($this->jobConfig, [
             'message' => $message,
-            'mailer' => $this->mailer
+            'mailer' => $this->mailer,
         ]);
-        return $job->push();
+        $job = Instance::ensure($jobConfig, MailJob::class);
+        $this->queue->push($job);
+        return true;
     }
 
     /**
@@ -77,17 +106,8 @@ class Mailer extends BaseMailer
      */
     public function compose($view = null, array $params = [])
     {
-        $message = $this->getInstance()->compose($view, $params);
+        $message = $this->mailer->compose($view, $params);
         $message->mailer = $this;
         return $message;
-    }
-
-    /**
-     * @return object
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function getInstance()
-    {
-        return Instance::ensure($this->mailer, 'yii\mail\BaseMailer');
     }
 }
