@@ -8,6 +8,7 @@ Queue mailer for Yii 2 framework
 ![PHP 7.0](https://img.shields.io/badge/PHP-7.0-green.svg) 
 ![PHP 7.1](https://img.shields.io/badge/PHP-7.1-green.svg) 
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-green.svg)
+![PHP 7.3](https://img.shields.io/badge/PHP-7.3-green.svg)
 
 Installation
 ------------
