@@ -2,14 +2,14 @@
 
 namespace mikk150\queuemailer\jobs;
 
-use yii\queue\Job;
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\di\Instance;
+use yii\queue\Job;
 
 /**
  *
  */
-class MailJob extends Object implements Job
+class MailJob extends BaseObject implements Job
 {
     public $mailer;
 
